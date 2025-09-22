@@ -1,11 +1,14 @@
+# Rule of Three Calculator
 
-  # Glass Material Editor
+A simple proportion (Rule of Three) calculator built with **React**, **Vite**, and **TailwindCSS**.
 
-  This is a code bundle for Glass Material Editor. The original project is available at https://www.figma.com/design/8QHaV8jfUU86oBOkjshfqD/Glass-Material-Editor.
+---
 
-  ## Running the code
+## 🚀 Technologies
 
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
-  
+- React 18
+- Vite
+- TailwindCSS
+- Lucide Icons
+- PWA support (`manifest.json`)
+- gh-pages (for GitHub Pages deployment)
