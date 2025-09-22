@@ -1,0 +1,13 @@
+{
+  "name": "Rule of Three",
+  "short_name": "Rule of Three",
+  "theme_color": "#1f2121",
+  "background_color": "#1f2121",
+  "start_url": "https://s3.us-west-1.amazonaws.com/allanjuliani.com.br/password-generator.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "icon.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
