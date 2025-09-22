@@ -6,7 +6,7 @@
   "start_url": "https://allanjuliani.github.io/rule-of-three/",
   "display": "standalone",
   "icons": [{
-    "src": "/icons/icon.png",
+    "src": "/rule-of-three/icon.png",
     "sizes": "512x512",
     "type": "image/png"
   }]
