@@ -63,39 +63,39 @@ export default function RuleOfThreeCalculator() {
   ]);
 
   // Glass shader parameters for pure glass effect
-  const glassParams: ShaderParams = {
-    width: 480,
-    height: 600,
-    mouseX: mousePosition.x,
-    mouseY: mousePosition.y,
-    tintR: 0.05,
-    tintG: 0.05,
-    tintB: 0.1,
-    saturation: 0.8,
-    distortion: 8.0,
-    blur: 5.0,
-    text: '',
-    iconSize: 0.0,
-    iconColorR: 0.0,
-    iconColorG: 0.0,
-    iconColorB: 0.0,
-    glassMode: 'light',
-    shadowIntensity: 0.0,
-    shadowOffsetX: 0,
-    shadowOffsetY: 0,
-    shadowBlur: 0,
-    cornerRadius: 16,
-    chromaticAberration: 6.0,
-    shape: 'rectangle',
-    donutThickness: 0.3,
-    starPoints: 5,
-    starInnerRadius: 0.4
-  };
+  // const glassParams: ShaderParams = {
+  //   width: 480,
+  //   height: 600,
+  //   mouseX: 0,
+  //   mouseY: 0,
+  //   tintR: 0.0,
+  //   tintG: 0.0,
+  //   tintB: 0.0,
+  //   saturation: 0.8,
+  //   distortion: 8.0,
+  //   blur: 15,
+  //   text: '',
+  //   iconSize: 0.0,
+  //   iconColorR: 0.0,
+  //   iconColorG: 0.0,
+  //   iconColorB: 0.0,
+  //   glassMode: 'light',
+  //   shadowIntensity: 0.0,
+  //   shadowOffsetX: 0,
+  //   shadowOffsetY: 0,
+  //   shadowBlur: 0,
+  //   cornerRadius: 16,
+  //   chromaticAberration: 6.0,
+  //   shape: 'rectangle',
+  //   donutThickness: 0.3,
+  //   starPoints: 5,
+  //   starInnerRadius: 0.4
+  // };
 
   // Calculate rule of three: A/B = C/X, so X = (B * C) / A
   const calculateRuleOfThree = () => {
     setError('');
-    
+
     const a = parseFloat(valueA);
     const b = parseFloat(valueB);
     const c = parseFloat(valueC);
@@ -121,7 +121,7 @@ export default function RuleOfThreeCalculator() {
     }
 
     const x = (b * c) / a;
-    
+
     // Check for invalid result
     if (!isFinite(x)) {
       setError('Resultado inválido');
@@ -166,31 +166,33 @@ export default function RuleOfThreeCalculator() {
   return (
     <div className="min-h-screen dark relative overflow-hidden" onMouseMove={handleMouseMove}>
       {/* Fixed NASA background */}
-      <div 
+      <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url('${BACKGROUND_IMAGE.url}')`,
         }}
       />
-      
+
       {/* Dark overlay for better contrast */}
-      <div className="fixed inset-0 bg-black/60" />
-      
+      {/* <div className="fixed inset-0 bg-black/60" /> */}
+
       {/* Main content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         {/* Card with glass effect */}
         <div className="relative w-full max-w-md mx-auto">
           {/* Glass effect background */}
-          <div className="absolute inset-0 rounded-lg overflow-hidden">
+          {/* <div className="absolute inset-0 rounded-lg overflow-hidden">
             <LiquidGlassShader
               backgroundMedia={BACKGROUND_IMAGE}
               uniforms={glassParams}
               className="w-full h-full"
             />
-          </div>
-          
+          </div> */}
+
           {/* Content overlay */}
-          <Card className="relative bg-black/20 backdrop-blur-sm border-white/20 shadow-2xl">
+          {/* <Card className="relative bg-black/20 backdrop-blur-sm border-white/20 shadow-2xl"> */}
+          <Card className="bg-black/10 backdrop-blur-xl border-white/20 shadow-2xl
+">
           <div className="p-6">
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
