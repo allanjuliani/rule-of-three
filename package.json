@@ -1,5 +1,5 @@
 {
-    "name": "Glass Material Editor",
+    "name": "rule-of-tree",
     "version": "0.1.0",
     "private": true,
     "type": "module",
@@ -30,6 +30,7 @@
         "@radix-ui/react-toggle": "^1.1.2",
         "@radix-ui/react-toggle-group": "^1.1.2",
         "@radix-ui/react-tooltip": "^1.1.8",
+        "@tailwindcss/vite": "^4.1.13",
         "class-variance-authority": "^0.7.1",
         "clsx": "*",
         "cmdk": "^1.1.1",
@@ -45,19 +46,22 @@
         "recharts": "^2.15.2",
         "sonner": "^2.0.3",
         "tailwind-merge": "*",
-        "vaul": "^1.1.2",
         "tailwindcss": "^4.1.13",
-        "@tailwindcss/vite": "^4.1.13"
+        "vaul": "^1.1.2",
+        "react-ga4": "^2.1.0"
     },
     "devDependencies": {
+        "@tailwindcss/vite": "^4.1.13",
         "@types/node": "^20.10.0",
         "@vitejs/plugin-react-swc": "^3.10.2",
-        "vite": "6.3.5",
+        "gh-pages": "^6.3.0",
         "tailwindcss": "^4.1.13",
-        "@tailwindcss/vite": "^4.1.13"
+        "vite": "6.3.5"
     },
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "preview": "vite preview",
+        "deploy": "gh-pages -d build"
     }
 }
