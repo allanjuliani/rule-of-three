@@ -1,0 +1,13 @@
+{
+  "name": "Rule of Three",
+  "short_name": "Rule of Three",
+  "theme_color": "#1f2121",
+  "background_color": "#1f2121",
+  "start_url": "https://allanjuliani.github.io/rule-of-three/",
+  "display": "standalone",
+  "icons": [{
+    "src": "/rule-of-three/logo.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
