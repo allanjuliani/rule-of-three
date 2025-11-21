@@ -41,20 +41,21 @@
         "react": "^18.3.1",
         "react-day-picker": "^8.10.1",
         "react-dom": "^18.3.1",
+        "react-ga4": "^2.1.0",
         "react-hook-form": "^7.55.0",
         "react-resizable-panels": "^2.1.7",
         "recharts": "^2.15.2",
         "sonner": "^2.0.3",
         "tailwind-merge": "*",
         "tailwindcss": "^4.1.13",
-        "vaul": "^1.1.2",
-        "react-ga4": "^2.1.0"
+        "vaul": "^1.1.2"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.1.13",
         "@types/node": "^20.10.0",
         "@vitejs/plugin-react-swc": "^3.10.2",
         "gh-pages": "^6.3.0",
+        "sort-package-json": "^3.4.0",
         "tailwindcss": "^4.1.13",
         "vite": "6.3.5"
     },

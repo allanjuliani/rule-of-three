@@ -31,3 +31,6 @@ dist-ssr
 
 # build output
 build
+
+# npm package files
+package-lock.json
