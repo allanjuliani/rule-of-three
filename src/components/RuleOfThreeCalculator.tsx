@@ -5,49 +5,19 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
 import { Alert, AlertDescription } from './ui/alert';
-import { Calculator, RotateCcw, ArrowRight, Lightbulb, AlertTriangle } from 'lucide-react';
-import LiquidGlassShader from './LiquidGlassShader';
+import { Calculator, RotateCcw, ArrowRight, History, AlertTriangle } from 'lucide-react';
 
-interface BackgroundMedia {
-  url: string;
-  type: 'image' | 'video';
-  blurhash?: string;
+interface HistoryEntry {
+  id: string;
+  a: string;
+  b: string;
+  c: string;
+  result: number;
+  timestamp: Date;
+  description?: string;
 }
 
-interface ShaderParams {
-  width: number;
-  height: number;
-  mouseX: number;
-  mouseY: number;
-  tintR: number;
-  tintG: number;
-  tintB: number;
-  saturation: number;
-  distortion: number;
-  blur: number;
-  text: string;
-  iconSize: number;
-  iconColorR: number;
-  iconColorG: number;
-  iconColorB: number;
-  glassMode: 'light' | 'dark';
-  shadowIntensity: number;
-  shadowOffsetX: number;
-  shadowOffsetY: number;
-  shadowBlur: number;
-  cornerRadius: number;
-  chromaticAberration: number;
-  shape: 'rectangle' | 'circle' | 'star' | 'hexagon' | 'donut';
-  donutThickness: number;
-  starPoints: number;
-  starInnerRadius: number;
-}
-
-const BACKGROUND_IMAGE: BackgroundMedia = {
-  url: 'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/webb/science/2022/07/STScI-01GA6KKWG229B16K4Q38CH3BXS.png',
-  type: 'image',
-  blurhash: 'L04_lE00~q%M?bof%LWB00M{WBay'
-};
+const BACKGROUND_IMAGE = 'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/webb/science/2022/07/STScI-01GA6KKWG229B16K4Q38CH3BXS.png';
 
 export default function RuleOfThreeCalculator() {
   const [valueA, setValueA] = useState<string>('');
@@ -55,42 +25,43 @@ export default function RuleOfThreeCalculator() {
   const [valueC, setValueC] = useState<string>('');
   const [result, setResult] = useState<number | null>(null);
   const [error, setError] = useState<string>('');
-  const [mousePosition, setMousePosition] = useState({ x: 300, y: 300 });
-  const [examples] = useState([
-    { a: '10', b: '20', c: '15', description: 'Proporção simples' },
-    { a: '100', b: '5', c: '200', description: 'Velocidade e tempo' },
-    { a: '3', b: '12', c: '7', description: 'Receita culinária' }
-  ]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
 
-  // Glass shader parameters for pure glass effect
-  // const glassParams: ShaderParams = {
-  //   width: 480,
-  //   height: 600,
-  //   mouseX: 0,
-  //   mouseY: 0,
-  //   tintR: 0.0,
-  //   tintG: 0.0,
-  //   tintB: 0.0,
-  //   saturation: 0.8,
-  //   distortion: 8.0,
-  //   blur: 15,
-  //   text: '',
-  //   iconSize: 0.0,
-  //   iconColorR: 0.0,
-  //   iconColorG: 0.0,
-  //   iconColorB: 0.0,
-  //   glassMode: 'light',
-  //   shadowIntensity: 0.0,
-  //   shadowOffsetX: 0,
-  //   shadowOffsetY: 0,
-  //   shadowBlur: 0,
-  //   cornerRadius: 16,
-  //   chromaticAberration: 6.0,
-  //   shape: 'rectangle',
-  //   donutThickness: 0.3,
-  //   starPoints: 5,
-  //   starInnerRadius: 0.4
-  // };
+  // Load history from localStorage on mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('ruleOfThreeHistory');
+    if (savedHistory) {
+      try {
+        const parsed = JSON.parse(savedHistory);
+        const historyWithDates = parsed.map((entry: any) => ({
+          ...entry,
+          timestamp: new Date(entry.timestamp)
+        }));
+        setHistory(historyWithDates);
+      } catch (error) {
+        console.error('Error loading history:', error);
+      }
+    }
+  }, []);
+
+  // Save history to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('ruleOfThreeHistory', JSON.stringify(history));
+  }, [history]);
+
+  // Save calculation to history
+  const saveToHistory = (calculatedResult: number) => {
+    const newEntry: HistoryEntry = {
+      id: Date.now().toString(),
+      a: valueA,
+      b: valueB,
+      c: valueC,
+      result: calculatedResult,
+      timestamp: new Date()
+    };
+
+    setHistory(prev => [newEntry, ...prev.slice(0, 9)]); // Keep only 10 most recent
+  };
 
   // Calculate rule of three: A/B = C/X, so X = (B * C) / A
   const calculateRuleOfThree = () => {
@@ -130,6 +101,11 @@ export default function RuleOfThreeCalculator() {
     }
 
     setResult(x);
+
+    // Save valid calculations to history
+    if (valueA && valueB && valueC) {
+      saveToHistory(x);
+    }
   };
 
   // Auto-calculate when values change
@@ -143,56 +119,47 @@ export default function RuleOfThreeCalculator() {
     setValueC('');
     setResult(null);
     setError('');
+    // Clear history as well
+    setHistory([]);
+    localStorage.removeItem('ruleOfThreeHistory');
   };
 
-  const loadExample = (example: typeof examples[0]) => {
-    setValueA(example.a);
-    setValueB(example.b);
-    setValueC(example.c);
+  const loadHistoryEntry = (entry: HistoryEntry) => {
+    setValueA(entry.a);
+    setValueB(entry.b);
+    setValueC(entry.c);
   };
 
-
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
+  const formatDate = (date: Date) => {
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
   const isValidCalculation = result !== null && !isNaN(result) && isFinite(result);
 
   return (
-    <div className="min-h-screen dark relative overflow-hidden" onMouseMove={handleMouseMove}>
+    <div className="min-h-screen dark relative overflow-hidden">
       {/* Fixed NASA background */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('${BACKGROUND_IMAGE.url}')`,
+          backgroundImage: `url('${BACKGROUND_IMAGE}')`,
         }}
       />
 
       {/* Dark overlay for better contrast */}
-      {/* <div className="fixed inset-0 bg-black/60" /> */}
+      <div className="fixed inset-0 bg-black/60" />
 
       {/* Main content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         {/* Card with glass effect */}
         <div className="relative w-full max-w-md mx-auto">
-          {/* Glass effect background */}
-          {/* <div className="absolute inset-0 rounded-lg overflow-hidden">
-            <LiquidGlassShader
-              backgroundMedia={BACKGROUND_IMAGE}
-              uniforms={glassParams}
-              className="w-full h-full"
-            />
-          </div> */}
-
           {/* Content overlay */}
-          {/* <Card className="relative bg-black/20 backdrop-blur-sm border-white/20 shadow-2xl"> */}
-          <Card className="bg-black/10 backdrop-blur-xl border-white/20 shadow-2xl
-">
+          <Card className="relative bg-black/30 backdrop-blur-md border-white/20 shadow-2xl backdrop-saturate-150">
           <div className="p-6">
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
@@ -230,7 +197,7 @@ export default function RuleOfThreeCalculator() {
                     placeholder="10"
                     value={valueA}
                     onChange={(e) => setValueA(e.target.value)}
-                    className="bg-white/10 backdrop-blur-sm border-white/30 text-white placeholder-gray-300 focus:border-blue-300"
+                    className="bg-white/10 backdrop-blur-sm border-white/30 text-white placeholder-gray-300 focus:border-blue-300 h-12"
                   />
                 </div>
                 <div className="text-center text-gray-200 text-lg drop-shadow-lg">:</div>
@@ -242,7 +209,7 @@ export default function RuleOfThreeCalculator() {
                     placeholder="20"
                     value={valueB}
                     onChange={(e) => setValueB(e.target.value)}
-                    className="bg-white/10 backdrop-blur-sm border-white/30 text-white placeholder-gray-300 focus:border-green-300"
+                    className="bg-white/10 backdrop-blur-sm border-white/30 text-white placeholder-gray-300 focus:border-green-300 h-12"
                   />
                 </div>
               </div>
@@ -264,13 +231,13 @@ export default function RuleOfThreeCalculator() {
                     placeholder="15"
                     value={valueC}
                     onChange={(e) => setValueC(e.target.value)}
-                    className="bg-white/10 backdrop-blur-sm border-white/30 text-white placeholder-gray-300 focus:border-purple-300"
+                    className="bg-white/10 backdrop-blur-sm border-white/30 text-white placeholder-gray-300 focus:border-purple-300 h-12"
                   />
                 </div>
                 <div className="text-center text-gray-200 text-lg drop-shadow-lg">:</div>
                 <div>
                   <Label className="text-sm text-orange-200 drop-shadow-lg">X</Label>
-                  <div className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-md px-3 py-2 min-h-[40px] flex items-center">
+                  <div className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-md px-3 py-2 min-h-[48px] flex items-center">
                     {isValidCalculation ? (
                       <span className="text-orange-200 font-mono drop-shadow-lg">
                         {result.toFixed(2)}
@@ -306,25 +273,33 @@ export default function RuleOfThreeCalculator() {
               </div>
             )}
 
-            {/* Examples section */}
+            {/* History section */}
             <div className="mb-4">
               <div className="flex items-center gap-2 mb-3">
-                <Lightbulb className="w-4 h-4 text-yellow-300 drop-shadow-lg" />
-                <span className="text-sm text-white drop-shadow-lg">Exemplos</span>
+                <History className="w-4 h-4 text-blue-300 drop-shadow-lg" />
+                <span className="text-sm text-white drop-shadow-lg">Histórico</span>
               </div>
-              <div className="grid grid-cols-1 gap-2">
-                {examples.map((example, index) => (
-                  <button
-                    key={index}
-                    onClick={() => loadExample(example)}
-                    className="p-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg border border-white/20 text-left transition-colors"
-                  >
-                    <div className="text-xs text-gray-200 mb-1 drop-shadow-lg">{example.description}</div>
-                    <div className="text-sm text-white font-mono drop-shadow-lg">
-                      {example.a} : {example.b} = {example.c} : ?
-                    </div>
-                  </button>
-                ))}
+              <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+                {history.length === 0 ? (
+                  <div className="p-3 text-center text-gray-400 text-sm">
+                    Nenhum cálculo realizado ainda
+                  </div>
+                ) : (
+                  history.map((entry) => (
+                    <button
+                      key={entry.id}
+                      onClick={() => loadHistoryEntry(entry)}
+                      className="p-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg border border-white/20 text-left transition-colors"
+                    >
+                      <div className="text-xs text-gray-300 mb-1 drop-shadow-lg">
+                        {formatDate(entry.timestamp)}
+                      </div>
+                      <div className="text-sm text-white font-mono drop-shadow-lg">
+                        {entry.a} : {entry.b} = {entry.c} : {entry.result.toFixed(2)}
+                      </div>
+                    </button>
+                  ))
+                )}
               </div>
             </div>
 
@@ -336,7 +311,7 @@ export default function RuleOfThreeCalculator() {
                 className="flex-1 bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 hover:text-white drop-shadow-lg"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Limpar
+                Limpar Tudo
               </Button>
             </div>
 
