@@ -2,13 +2,89 @@
 // Based on the BlurHash algorithm by Dag Ågren
 
 const digitCharacters = [
-  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-  'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-  'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-  '#', '$', '%', '*', '+', ',', '-', '.', ':', ';', '=', '?', '@',
-  '[', ']', '^', '_', '{', '|', '}', '~'
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "#",
+  "$",
+  "%",
+  "*",
+  "+",
+  ",",
+  "-",
+  ".",
+  ":",
+  ";",
+  "=",
+  "?",
+  "@",
+  "[",
+  "]",
+  "^",
+  "_",
+  "{",
+  "|",
+  "}",
+  "~",
 ];
 
 const decode83 = (str: string): number => {
@@ -28,7 +104,10 @@ const decodeDC = (value: number): [number, number, number] => {
   return [sRGBToLinear(intR), sRGBToLinear(intG), sRGBToLinear(intB)];
 };
 
-const decodeAC = (value: number, maximumValue: number): [number, number, number] => {
+const decodeAC = (
+  value: number,
+  maximumValue: number,
+): [number, number, number] => {
   const quantR = Math.floor(value / (19 * 19));
   const quantG = Math.floor(value / 19) % 19;
   const quantB = value % 19;
@@ -68,12 +147,12 @@ export const decode = (
   blurhash: string,
   width: number,
   height: number,
-  punch?: number
+  punch?: number,
 ): Uint8ClampedArray => {
   punch = punch || 1;
 
   if (blurhash.length < 6) {
-    throw new Error('BlurHash must be at least 6 characters');
+    throw new Error("BlurHash must be at least 6 characters");
   }
 
   const sizeFlag = decode83(blurhash.substring(0, 1));
@@ -135,21 +214,21 @@ export const decodeToCanvas = (
   blurhash: string,
   width: number,
   height: number,
-  punch?: number
+  punch?: number,
 ): HTMLCanvasElement => {
   const pixels = decode(blurhash, width, height, punch);
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
-  
-  const ctx = canvas.getContext('2d');
+
+  const ctx = canvas.getContext("2d");
   if (!ctx) {
-    throw new Error('Could not get 2D context');
+    throw new Error("Could not get 2D context");
   }
-  
+
   const imageData = ctx.createImageData(width, height);
   imageData.data.set(pixels);
   ctx.putImageData(imageData, 0, 0);
-  
+
   return canvas;
 };

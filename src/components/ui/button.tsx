@@ -49,7 +49,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       />
     );
-  }
+  },
 );
 
 export { Button, buttonVariants };

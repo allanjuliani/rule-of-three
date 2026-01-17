@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
-import { Label } from './ui/label';
-import { Input } from './ui/input';
+import { useState, useRef } from "react";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 interface ColorPickerProps {
   label: string;
@@ -9,7 +9,12 @@ interface ColorPickerProps {
   placeholder?: string;
 }
 
-export default function ColorPicker({ label, value, onChange, placeholder = "#ffffff" }: ColorPickerProps) {
+export default function ColorPicker({
+  label,
+  value,
+  onChange,
+  placeholder = "#ffffff",
+}: ColorPickerProps) {
   const hiddenColorInputRef = useRef<HTMLInputElement>(null);
 
   // Color conversion utilities
@@ -27,7 +32,7 @@ export default function ColorPicker({ label, value, onChange, placeholder = "#ff
   const rgbToHex = (r: number, g: number, b: number) => {
     const toHex = (c: number) => {
       const hex = Math.round(c * 255).toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
+      return hex.length === 1 ? "0" + hex : hex;
     };
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   };
