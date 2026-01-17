@@ -24,7 +24,7 @@ interface HistoryEntry {
 }
 
 const BACKGROUND_IMAGE =
-  "https://assets.science.nasa.gov/dynamicimage/assets/science/missions/webb/science/2022/07/STScI-01GA6KKWG229B16K4Q38CH3BXS.png";
+  "bg.png";
 
 export default function RuleOfThreeCalculator() {
   const [valueA, setValueA] = useState<string>("");
